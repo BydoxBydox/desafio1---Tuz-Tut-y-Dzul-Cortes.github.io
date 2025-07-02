@@ -1,0 +1,254 @@
+<!-- Juan Carlos Tuz Tut-->
+<!-- Daniel Cortes Cervera-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  <title>Conference Ticket Generator</title>
+  <style>
+    body {
+      background: url('./assets/images/background-desktop.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Inconsolata', monospace;
+      color: hsl(248, 70%, 10%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    p {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    .form-group {
+      margin: 15px 0;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid hsl(252, 6%, 83%);
+      border-radius: 5px;
+      font-family: 'Inconsolata', monospace;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: hsl(7, 88%, 67%);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Inconsolata', monospace;
+    }
+    button:hover {
+      background: hsl(7, 71%, 60%);
+    }
+    .ticket {
+      display: none;
+      margin-top: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 600px;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .ticket.active {
+      display: flex;
+    }
+    .ticket-left {
+      flex: 2;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .ticket-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .ticket-logo img {
+      width: 24px;
+    }
+    .ticket-details {
+      margin-top: 10px;
+      text-align: left;
+    }
+    .ticket-details p {
+      font-size: 14px;
+      color: hsl(252, 6%, 83%);
+      margin: 5px 0;
+    }
+    .ticket-user {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .ticket-user img {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      margin-right: 0.5rem;
+    }
+    .ticket-user-data strong {
+      display: block;
+    }
+    .ticket-user-data span {
+      color: hsl(252, 6%, 83%);
+      font-size: 14px;
+    }
+    .ticket-right {
+      flex: 0 0 50px;
+      background: hsl(248, 70%, 10%);
+      color: white;
+      writing-mode: vertical-rl;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-left: 1px dashed hsl(252, 6%, 83%);
+      font-size: 12px;
+    }
+    .ticket-right img {
+      width: 20px;
+      margin: 5px auto;
+      opacity: 0.5;
+    }
+    .attribution {
+      font-size: 11px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .attribution a {
+      color: hsl(228, 45%, 44%);
+    }
+    @media (max-width: 768px) {
+      body {
+        background: url('./assets/images/background-mobile.png') no-repeat center center fixed;
+        background-size: cover;
+      }
+      .ticket {
+        flex-direction: column;
+      }
+      .ticket-right {
+        flex-direction: row;
+        writing-mode: horizontal-tb;
+        border-left: none;
+        border-top: 1px dashed hsl(252, 6%, 83%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="formSection">
+    <h1>Your Journey to Coding Conf 2025 Starts Here!</h1>
+    <p>Secure your spot at next year's biggest coding conference.</p>
+    <div class="form-group">
+      <label>Upload Avatar</label>
+      <p>Drag and drop or click to upload</p>
+      <p>Upload your photo (JPG or PNG, max size: 500KB).</p>
+      <input type="file" id="avatar" accept="image/jpeg,image/png">
+    </div>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="name" placeholder="Jonatan Kristof">
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="jonatan@email.com">
+    </div>
+    <div class="form-group">
+      <label>GitHub Username</label>
+      <input type="text" id="github" placeholder="@jonatankristof081">
+    </div>
+    <button onclick="generateTicket()">Generate My Ticket</button>
+  </div>
+
+  <div class="ticket" id="generatedTicket">
+    <div class="ticket-left">
+      <div class="ticket-logo">
+        <img src="./assets/images/logo-mark.svg" alt="logo">
+        <span>Coding Conf</span>
+      </div>
+      <div class="ticket-details">
+        <p>Jan 31, 2025 / Austin, TX</p>
+        <div class="ticket-user">
+          <img id="ticketAvatar" src="./assets/images/image-avatar.jpg" alt="avatar">
+          <div class="ticket-user-data">
+            <strong id="ticketName2">Jonatan Kristof</strong>
+            <span id="ticketGithub">@jonatankristof081</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ticket-right">
+      <span>#00609</span>
+      <img src="./assets/images/pattern-ticket.svg" alt="pattern">
+    </div>
+  </div>
+
+  <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>. 
+    Coded by <a href="#">Your Name Here</a>.
+  </div>
+
+  <script>
+    function generateTicket() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const github = document.getElementById('github').value;
+      const avatar = document.getElementById('avatar');
+
+      if (!name || !email || !github || !avatar.files.length) {
+        alert('Please fill all fields and upload an avatar.');
+        return;
+      }
+      if (email.indexOf('@') === -1 || email.indexOf('.') === -1) {
+        alert('Invalid email.');
+        return;
+      }
+      if (avatar.files[0].size > 500000) {
+        alert('Avatar too big.');
+        return;
+      }
+
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('generatedTicket').classList.add('active');
+      document.getElementById('ticketName2').textContent = name;
+      document.getElementById('ticketGithub').textContent = github;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('ticketAvatar').src = e.target.result;
+      }
+      reader.readAsDataURL(avatar.files[0]);
+    }
+  </script>
+</body>
+</html>
+<!-- Juan Carlos Tuz Tut-->
+<!-- Daniel Cortes Cervera-->
